@@ -12,10 +12,8 @@ class PlayerStats {
   int highestRank;
   @JsonKey(name: 'highest_rank_date')
   DateTime highestRankDate;
-  @JsonKey(name: 'current_wppr_value')
-  double currentWPPRValue;
-  @JsonKey(name: 'wppr_points_all_time')
-  double allTimeWPPRPoints;
+  @JsonKey(name: 'current_wppr_points')
+  double currentWPPRPoints;
   @JsonKey(name: 'best_finish')
   int bestFinish;
   @JsonKey(name: 'best_finish_count')
@@ -34,10 +32,8 @@ class PlayerStats {
   int ratingsRank;
   @JsonKey(name: 'ratings_value')
   double ratingsValue;
-  @JsonKey(name: 'efficiency_rank')
-  int efficiencyRank;
-  @JsonKey(name: 'efficiency_value')
-  double efficiencyValue;
+  @JsonKey(name: 'years_active')
+  int yearsActive;
 
   PlayerStats({
     required this.currentRank,
@@ -45,8 +41,7 @@ class PlayerStats {
     required this.lastYearRank,
     required this.highestRank,
     required this.highestRankDate,
-    required this.currentWPPRValue,
-    required this.allTimeWPPRPoints,
+    required this.currentWPPRPoints,
     required this.bestFinish,
     required this.bestFinishCount,
     required this.averageFinish,
@@ -56,8 +51,7 @@ class PlayerStats {
     required this.totalEventsAway,
     required this.ratingsRank,
     required this.ratingsValue,
-    required this.efficiencyRank,
-    required this.efficiencyValue,
+    required this.yearsActive,
   });
 
   factory PlayerStats.fromJson(Map<String, dynamic> json) =>
@@ -68,24 +62,22 @@ class PlayerStats {
 
 PlayerStats _$PlayerStatsFromJson(Map<String, dynamic> json) {
   return PlayerStats(
-    currentRank: json['current_wppr_rank'] as int,
-    lastMonthRank: json['last_month_rank'] as int,
-    lastYearRank: json['last_year_rank'] as int,
-    highestRank: json['highest_rank'] as int,
+    currentRank: int.parse(json['current_wppr_rank']),
+    lastMonthRank: int.parse(json['last_month_rank']),
+    lastYearRank: int.parse(json['last_year_rank']),
+    highestRank: int.parse(json['highest_rank']),
     highestRankDate: DateTime.parse(json['highest_rank_date'] as String),
-    currentWPPRValue: json['current_wppr_value'] as double,
-    allTimeWPPRPoints: json['wppr_points_all_time'] as double,
-    bestFinish: json['best_finish'] as int,
-    bestFinishCount: json['best_finish_count'] as int,
-    averageFinish: json['average_finish'] as int,
-    averageFinishLastYear: json['average_finish_last_year'] as int,
-    totalEventsAllTime: json['total_events_all_time'] as int,
-    totalActiveEvents: json['total_active_events'] as int,
-    totalEventsAway: json['total_events_away'] as int,
-    ratingsRank: json['ratings_rank'] as int,
-    ratingsValue: json['ratings_value'] as double,
-    efficiencyRank: json['efficiency_rank'] as int,
-    efficiencyValue: json['efficiency_value'] as double,
+    currentWPPRPoints: double.parse(json['current_wppr_points']),
+    bestFinish: int.parse(json['best_finish']),
+    bestFinishCount: int.parse(json['best_finish_count']),
+    averageFinish: int.parse(json['average_finish']),
+    averageFinishLastYear: int.parse(json['average_finish_last_year']),
+    totalEventsAllTime: int.parse(json['total_events_all_time']),
+    totalActiveEvents: int.parse(json['total_active_events']),
+    totalEventsAway: int.parse(json['total_events_away']),
+    ratingsRank: int.parse(json['ratings_rank']),
+    ratingsValue: double.parse(json['ratings_value']),
+    yearsActive: int.parse(json['years_active']),
   );
 }
 
@@ -96,8 +88,7 @@ Map<String, dynamic> _$PlayerStatsToJson(PlayerStats instance) =>
       'last_year_rank': instance.lastYearRank,
       'highest_rank': instance.highestRank,
       'highest_rank_date': instance.highestRankDate.toIso8601String(),
-      'current_wppr_value': instance.currentWPPRValue,
-      'wppr_points_all_time': instance.allTimeWPPRPoints,
+      'current_wppr_value': instance.currentWPPRPoints,
       'best_finish': instance.bestFinish,
       'best_finish_count': instance.bestFinishCount,
       'average_finish': instance.averageFinish,
@@ -107,6 +98,5 @@ Map<String, dynamic> _$PlayerStatsToJson(PlayerStats instance) =>
       'total_events_away': instance.totalEventsAway,
       'ratings_rank': instance.ratingsRank,
       'ratings_value': instance.ratingsValue,
-      'efficiency_rank': instance.efficiencyRank,
-      'efficiency_value': instance.efficiencyValue,
+      'years_active': instance.yearsActive,
     };

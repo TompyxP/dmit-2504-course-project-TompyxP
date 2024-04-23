@@ -24,6 +24,8 @@ class PlayerMetadata {
   bool excludedFlag;
   @JsonKey(name: 'ifpa_registered')
   bool isIFPARegistered;
+  @JsonKey(name: 'profile_photo')
+  String profilePhotoUrl;
 
   PlayerMetadata({
     required this.playerID,
@@ -37,6 +39,7 @@ class PlayerMetadata {
     required this.age,
     required this.excludedFlag,
     required this.isIFPARegistered,
+    required this.profilePhotoUrl
   });
 
   factory PlayerMetadata.fromJson(Map<String, dynamic> json) =>
@@ -47,17 +50,18 @@ class PlayerMetadata {
 
 PlayerMetadata _$PlayerMetadataViewFromJson(Map<String, dynamic> json) {
   return PlayerMetadata(
-    playerID: json['player_id'] as int,
+    playerID: int.parse(json['player_id']),
     firstName: json['first_name'] as String,
     lastName: json['last_name'] as String,
     city: json['city'] as String,
-    state: json['state'] as String,
+    state: json['stateprov'] as String,
     countryCode: json['country_code'] as String,
     countryName: json['country_name'] as String,
     initials: json['initials'] as String,
     age: json['age'] as int,
-    excludedFlag: json['excluded_flag'] as bool,
-    isIFPARegistered: json['ifpa_registered'] as bool,
+    excludedFlag: bool.parse(json['excluded_flag']),
+    isIFPARegistered: bool.parse(json['ifpa_registered']),
+    profilePhotoUrl: json['profile_photo'] as String
   );
 }
 

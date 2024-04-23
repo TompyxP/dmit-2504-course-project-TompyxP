@@ -4,7 +4,7 @@ import 'dart:async';
 import '../services/network.dart';
 
 const apiKey = '';
-const baseUrl = 'https://api.ifpapinball.com/v1';
+const baseUrl = 'api.ifpapinball.com';
 
 class IfpaService {
 
@@ -27,7 +27,7 @@ class IfpaService {
     Uri url = Uri(
       scheme: 'https',
       host: baseUrl,
-      path: '/player/search',
+      path: '/v1/player/search',
       query: 'api_key=$apiKey&q=$queryString'
     );
 
@@ -42,7 +42,7 @@ class IfpaService {
     Uri url = Uri(
       scheme: 'https',
       host: baseUrl,
-      path: '/rankings',
+      path: '/v1/rankings',
       query: 'api_key=$apiKey&count=10'
     );
 
@@ -57,7 +57,7 @@ class IfpaService {
     Uri url = Uri(
       scheme: 'https',
       host: baseUrl,
-      path: '/pvp',
+      path: '/v1/pvp',
       query: 'api_key=$apiKey&p1=$playerId1&p2=$playerId2'
     );
 
