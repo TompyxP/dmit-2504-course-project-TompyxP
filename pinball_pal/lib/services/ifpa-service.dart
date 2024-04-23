@@ -1,10 +1,9 @@
 // ignore_for_file: avoid_print, unused_local_variable, file_names
 
 import 'dart:async';
-import 'dart:ffi';
 import '../services/network.dart';
 
-const apiKey = '8eeaabbac22eee974ba5454731b06778';
+const apiKey = '';
 const baseUrl = 'https://api.ifpapinball.com/v1';
 
 class IfpaService {

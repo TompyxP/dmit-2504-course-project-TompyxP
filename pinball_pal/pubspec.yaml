@@ -39,6 +39,7 @@ dependencies:
   http:
   sqflite:
   path:
+  json_annotation:
 
 dev_dependencies:
   flutter_test:
