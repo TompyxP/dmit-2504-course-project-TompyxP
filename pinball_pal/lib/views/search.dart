@@ -52,6 +52,20 @@ class SearchViewState extends State<SearchView> {
     throw 'Error getting search results';
   }
 
+  String getOrdinalSuffix(int i) {
+    double j = i % 10, k = i % 100;
+    if (j == 1 && k != 11) {
+      return '${i}st';
+    }
+    if (j == 2 && k != 12) {
+      return '${i}nd';
+    }
+    if (j == 3 && k != 13) {
+      return '${i}rd';
+    }
+    return '${i}th';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,7 +133,7 @@ class SearchViewState extends State<SearchView> {
                               return Card(
                                   child: ListTile(
                                       title: Text(
-                                        'Rank: ${snapshot.data!.searchResults[index].wpprRank}',
+                                        'Rank: ${getOrdinalSuffix(snapshot.data!.searchResults[index].wpprRank)}',
                                         style: const TextStyle(fontSize: 20),
                                       ),
                                       subtitle: Text(

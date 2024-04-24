@@ -18,20 +18,37 @@ class FavoritesViewState extends State<FavoritesView> {
   final SQFliteDbService databaseService = SQFliteDbService();
   late Future<List<PlayerModel>> favoritePlayers;
   List<Map<String, dynamic>> dbPlayers = [];
+  bool isReady = false;
 
   @override
   void initState() {
-    super.initState();
     getOrInitDatabaseAndDisplayAllPlayers();
+    super.initState();
   }
 
   void getOrInitDatabaseAndDisplayAllPlayers() async {
     await databaseService.getOrCreateDatabaseHandle();
     dbPlayers = await databaseService.getAllFavoritePlayers();
     await databaseService.printAllFavoritePlayers();
+    var apiPlayers = getAllFavoritePlayersFromApi();
     setState(() {
-      favoritePlayers = getAllFavoritePlayersFromApi();
+      favoritePlayers = apiPlayers;
+      isReady = true;
     });
+  }
+
+  String getOrdinalSuffix(int i) {
+    double j = i % 10, k = i % 100;
+    if (j == 1 && k != 11) {
+      return '${i}st';
+    }
+    if (j == 2 && k != 12) {
+      return '${i}nd';
+    }
+    if (j == 3 && k != 13) {
+      return '${i}rd';
+    }
+    return '${i}th';
   }
 
   Future<List<PlayerModel>> getAllFavoritePlayersFromApi() async {
@@ -52,85 +69,102 @@ class FavoritesViewState extends State<FavoritesView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Favorites'),
-      ),
-      body: Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              'Your Favorites',
-              style: const TextStyle(fontSize: 24),
-            ),
-            FutureBuilder<List<PlayerModel>>(
-                future: favoritePlayers,
-                builder: (BuildContext context, snapshot) {
-                  if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                    return Expanded(
-                        child: ListView.builder(
-                            itemCount: snapshot.data!.length,
-                            itemBuilder: (BuildContext context, index) {
-                              return Card(
-                                  child: ListTile(
-                                title: Text(
-                                  'Rank: ${snapshot.data![index].playerStats.currentRank}',
-                                  style: const TextStyle(fontSize: 20),
-                                ),
-                                subtitle: Text(
-                                  'Name: ${snapshot.data![index].player.firstName} ${snapshot.data![index].player.lastName}',
-                                  style: const TextStyle(fontSize: 16),
-                                ),
-                                trailing: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => PlayerView(
-                                                  playerId: snapshot
-                                                      .data![index]
-                                                      .player
-                                                      .playerID),
-                                            ),
-                                          );
-                                        },
-                                        child: Text('Stats'),
-                                      ),
-                                      const SizedBox(width: 10),
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          removeFromFavorites(snapshot.data![index]);
-                                        },
-                                        child: Icon(
-                                          Icons.delete,
-                                          size: 20,
-                                        )
-                                      ),
-                                    ],
-                              )));
-                            }));
-                  } else if (dbPlayers.isEmpty) {
-                    return Text('No favorites added yet!');
-                  }
-                  return const Center(
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                        SizedBox(
-                            width: 30,
-                            height: 30,
-                            child: CircularProgressIndicator())
-                      ]));
-                }),
-          ],
+    if (isReady) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Favorites'),
         ),
-      ),
-    );
+        body: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                'Your Favorites',
+                style: const TextStyle(fontSize: 24),
+              ),
+              FutureBuilder<List<PlayerModel>>(
+                  future: favoritePlayers,
+                  builder: (BuildContext context, snapshot) {
+                    if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                      return Expanded(
+                          child: ListView.builder(
+                              itemCount: snapshot.data!.length,
+                              itemBuilder: (BuildContext context, index) {
+                                return Card(
+                                    child: ListTile(
+                                        title: Text(
+                                          'Rank: ${getOrdinalSuffix(snapshot.data![index].playerStats.currentRank)}',
+                                          style: const TextStyle(fontSize: 20),
+                                        ),
+                                        subtitle: Text(
+                                          'Name: ${snapshot.data![index].player.firstName} ${snapshot.data![index].player.lastName}',
+                                          style: const TextStyle(fontSize: 16),
+                                        ),
+                                        trailing: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        PlayerView(
+                                                            playerId: snapshot
+                                                                .data![index]
+                                                                .player
+                                                                .playerID),
+                                                  ),
+                                                );
+                                              },
+                                              child: Text('Stats'),
+                                            ),
+                                            const SizedBox(width: 10),
+                                            ElevatedButton(
+                                                onPressed: () {
+                                                  removeFromFavorites(
+                                                      snapshot.data![index]);
+                                                },
+                                                child: Icon(
+                                                  Icons.delete,
+                                                  size: 20,
+                                                )),
+                                          ],
+                                        )));
+                              }));
+                    } else if (dbPlayers.isEmpty) {
+                      return Text('No favorites added yet!');
+                    }
+                    return const Center(
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CircularProgressIndicator()
+                        ]));
+                  }),
+            ],
+          ),
+        ),
+      );
+    } else {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Favorites'),
+        ),
+        body: Center(
+          child: const Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                'Your Favorites',
+                style: TextStyle(fontSize: 24),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
   }
 
   Future<void> removeFromFavorites(PlayerModel player) async {
@@ -138,7 +172,8 @@ class FavoritesViewState extends State<FavoritesView> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Do you want to remove ${player.player.firstName} ${player.player.lastName} from your favorites?'),
+            title: Text(
+                'Do you want to remove ${player.player.firstName} ${player.player.lastName} from your favorites?'),
             contentPadding: const EdgeInsets.all(5.0),
             actions: <Widget>[
               TextButton(
@@ -146,9 +181,9 @@ class FavoritesViewState extends State<FavoritesView> {
                 onPressed: () async {
                   if (player.player.playerID != 0) {
                     try {
-                        var dbPlayer = { 'playerId': player.player.playerID }; 
-                        await databaseService.deletePlayer(dbPlayer);
-                        getOrInitDatabaseAndDisplayAllPlayers();
+                      var dbPlayer = {'playerId': player.player.playerID};
+                      await databaseService.deletePlayer(dbPlayer);
+                      getOrInitDatabaseAndDisplayAllPlayers();
                     } catch (e) {
                       print('HomeView removePlayer catch: $e');
                     }

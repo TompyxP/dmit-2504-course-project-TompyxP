@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:pinball_pal/data-models/pvp/pvp_model.dart';
+import 'package:pinball_pal/data-models/pvp/pvp_tournament.dart';
 import '../services/ifpa-service.dart';
 import '../services/db-service.dart';
 
@@ -79,7 +80,7 @@ class PvpViewState extends State<PvpView> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                           const Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               Text(
                                 'Player One',
@@ -93,7 +94,21 @@ class PvpViewState extends State<PvpView> {
                           ),
                           const SizedBox(height: 10),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Text(
+                                '${snapshot.data!.playerOneFirstName} ${snapshot.data!.playerOneLastName}',
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                              Text(
+                                '${snapshot.data!.playerTwoFirstName} ${snapshot.data!.playerTwoLastName}',
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               Text(
                                 'Id: ${snapshot.data!.playerOneId}',
@@ -107,21 +122,7 @@ class PvpViewState extends State<PvpView> {
                           ),
                           const SizedBox(height: 10),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Name: ${snapshot.data!.playerOneFirstName} ${snapshot.data!.playerOneLastName}',
-                                style: const TextStyle(fontSize: 14),
-                              ),
-                              Text(
-                                'Name: ${snapshot.data!.playerTwoFirstName} ${snapshot.data!.playerTwoLastName}',
-                                style: const TextStyle(fontSize: 14),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               Text(
                                 'Country: ${snapshot.data!.playerOneCountryCode}',
@@ -140,43 +141,14 @@ class PvpViewState extends State<PvpView> {
                                       itemCount: snapshot.data!.pvp!.length,
                                       itemBuilder:
                                           (BuildContext context, index) {
-                                        return Card(
-                                            child: Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: <Widget>[
-                                              ListTile(
-                                                title: Text(
-                                                    'Tournament: ${snapshot.data!.pvp![index].tournamentName}',
-                                                    style: const TextStyle(
-                                                        fontSize: 12,
-                                                        fontWeight:
-                                                            FontWeight.bold)),
-                                                subtitle: Text(
-                                                    'Event: ${snapshot.data!.pvp![index].eventName}'),
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceAround,
-                                                children: [
-                                                  Text(
-                                                      'Date: ${snapshot.data!.pvp![index].eventDate}'),
-                                                  Text(
-                                                      'Country: ${snapshot.data!.pvp![index].countryCode}'),
-                                                ],
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceAround,
-                                                children: <Widget>[
-                                                  Text(
-                                                      'P1 Finish: ${getOrdinalSuffix(snapshot.data!.pvp![index].playerOneFinishPosition)}'),
-                                                  Text(
-                                                      'P2 Finish: ${getOrdinalSuffix(snapshot.data!.pvp![index].playerTwoFinishPosition)}'),
-                                                ],
-                                              ),
-                                            ]));
+                                        return Column(
+                                          children: [
+                                            PvpCard(
+                                                pvp:
+                                                    snapshot.data!.pvp![index]),
+                                            const SizedBox(height: 10),
+                                          ],
+                                        );
                                       })
                                   : const Center(
                                       child: Text(
@@ -203,5 +175,181 @@ class PvpViewState extends State<PvpView> {
         ),
       ),
     );
+  }
+}
+
+const darkColor = Color(0xFF49535C);
+
+class PvpCard extends StatelessWidget {
+  final PvpTournament pvp;
+
+  const PvpCard({Key? key, required this.pvp}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 1),
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 500),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 2,
+                  blurRadius: 2,
+                  offset: const Offset(0, 3), // changes position of shadow
+                )
+              ],
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 80,
+                  child: Stack(
+                    children: [
+                      Container(
+                        height: 60,
+                        decoration: const BoxDecoration(
+                          color: darkColor,
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(20),
+                            topLeft: Radius.circular(20),
+                          ),
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.only(
+                                  left: 12,
+                                  top: 8,
+                                ),
+                                constraints: const BoxConstraints(
+                                  maxWidth: 350,
+                                ),
+                                child: Text(
+                                  pvp.tournamentName.toString(),
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFFFFFFFF),
+                                  ),
+                                  softWrap: true,
+                                ),
+                              ),
+                              const SizedBox(height: 25),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12),
+                      child: Text(
+                        'Event: ${pvp.eventName}',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: darkColor,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8)
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 5,
+                  ),
+                  child: Row(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text('Date: \nCountry:    ',
+                              style: buildMontserrat(
+                                darkColor,
+                              )),
+                          const SizedBox(height: 16),
+                          Text('P1 Finish: \nP2 Finish:',
+                              style: buildMontserrat(
+                                darkColor,
+                              )),
+                        ],
+                      ),
+                      const SizedBox(width: 8),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(pvp.eventDate.toString(),
+                              style: buildMontserrat(
+                                darkColor,
+                              )),
+                          Text(pvp.countryCode.toString(),
+                              style: buildMontserrat(
+                                darkColor,
+                              )),
+                          const SizedBox(height: 16),
+                          Text(getOrdinalSuffix(pvp.playerOneFinishPosition),
+                              style: buildMontserrat(
+                                darkColor,
+                              )),
+                          Text(getOrdinalSuffix(pvp.playerTwoFinishPosition),
+                              style: buildMontserrat(
+                                darkColor,
+                              )),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 8)
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  TextStyle buildMontserrat(
+    Color color, {
+    FontWeight fontWeight = FontWeight.normal,
+  }) {
+    return TextStyle(
+      fontSize: 14,
+      color: color,
+      fontWeight: fontWeight,
+    );
+  }
+
+  String getOrdinalSuffix(int i) {
+    double j = i % 10, k = i % 100;
+    if (j == 1 && k != 11) {
+      return '${i}st';
+    }
+    if (j == 2 && k != 12) {
+      return '${i}nd';
+    }
+    if (j == 3 && k != 13) {
+      return '${i}rd';
+    }
+    return '${i}th';
   }
 }

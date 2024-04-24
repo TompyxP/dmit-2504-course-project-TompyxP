@@ -36,6 +36,20 @@ class HomeViewState extends State<HomeView> {
     throw 'Error getting top 10 players';
   }
 
+  String getOrdinalSuffix(int i) {
+    double j = i % 10, k = i % 100;
+    if (j == 1 && k != 11) {
+      return '${i}st';
+    }
+    if (j == 2 && k != 12) {
+      return '${i}nd';
+    }
+    if (j == 3 && k != 13) {
+      return '${i}rd';
+    }
+    return '${i}th';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,7 +102,7 @@ class HomeViewState extends State<HomeView> {
                               return Card(
                                   child: ListTile(
                                       title: Text(
-                                        'Rank: ${snapshot.data!.rankings[index].currentWpprRank}',
+                                        'Rank: ${getOrdinalSuffix(snapshot.data!.rankings[index].currentWpprRank)}',
                                         style: const TextStyle(fontSize: 20),
                                       ),
                                       subtitle: Text(

@@ -11,7 +11,7 @@ class PlayerStats {
   @JsonKey(name: 'highest_rank')
   int highestRank;
   @JsonKey(name: 'highest_rank_date')
-  DateTime highestRankDate;
+  String highestRankDate;
   @JsonKey(name: 'current_wppr_points')
   double currentWPPRPoints;
   @JsonKey(name: 'best_finish')
@@ -66,7 +66,7 @@ PlayerStats _$PlayerStatsFromJson(Map<String, dynamic> json) {
     lastMonthRank: int.parse(json['last_month_rank']),
     lastYearRank: int.parse(json['last_year_rank']),
     highestRank: int.parse(json['highest_rank']),
-    highestRankDate: DateTime.parse(json['highest_rank_date'] as String),
+    highestRankDate: json['highest_rank_date'] as String,
     currentWPPRPoints: double.parse(json['current_wppr_points']),
     bestFinish: int.parse(json['best_finish']),
     bestFinishCount: int.parse(json['best_finish_count']),
@@ -87,7 +87,7 @@ Map<String, dynamic> _$PlayerStatsToJson(PlayerStats instance) =>
       'last_month_rank': instance.lastMonthRank,
       'last_year_rank': instance.lastYearRank,
       'highest_rank': instance.highestRank,
-      'highest_rank_date': instance.highestRankDate.toIso8601String(),
+      'highest_rank_date': instance.highestRankDate,
       'current_wppr_value': instance.currentWPPRPoints,
       'best_finish': instance.bestFinish,
       'best_finish_count': instance.bestFinishCount,
