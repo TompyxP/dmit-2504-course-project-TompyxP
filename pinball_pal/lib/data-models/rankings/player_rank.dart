@@ -61,14 +61,6 @@ class PlayerRank {
       _$PlayerRankFromJson(json);
 
   Map<String, dynamic> toJson() => _$PlayerRankToJson(this);
-
-  static int _intFromString(String value) {
-    return int.parse(value);
-  }
-
-  static double _doubleFromString(String value) {
-    return double.parse(value);
-  }
 }
 
 PlayerRank _$PlayerRankFromJson(Map<String, dynamic> json) {

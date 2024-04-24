@@ -58,7 +58,7 @@ PlayerMetadata _$PlayerMetadataViewFromJson(Map<String, dynamic> json) {
     countryCode: json['country_code'] as String,
     countryName: json['country_name'] as String,
     initials: json['initials'] as String,
-    age: json['age'] as int,
+    age: json['age'] == '' ? 0 : json['age'] as int,
     excludedFlag: bool.parse(json['excluded_flag']),
     isIFPARegistered: bool.parse(json['ifpa_registered']),
     profilePhotoUrl: json['profile_photo'] as String
@@ -78,4 +78,5 @@ Map<String, dynamic> _$PlayerMetadataToJson(PlayerMetadata instance) =>
       'age': instance.age,
       'excluded_flag': instance.excludedFlag,
       'ifpa_registered': instance.isIFPARegistered,
+      'profile_photo': instance.profilePhotoUrl
     };

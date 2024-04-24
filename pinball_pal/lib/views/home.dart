@@ -7,6 +7,8 @@ import 'package:pinball_pal/data-models/rankings/rankings.dart';
 import '../services/ifpa-service.dart';
 import '../services/db-service.dart';
 import './player.dart';
+import './search.dart';
+import './favorites.dart';
 
 class HomeView extends StatefulWidget {
   @override
@@ -44,6 +46,37 @@ class HomeViewState extends State<HomeView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            ButtonBar(
+              alignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SearchView(),
+                      ),
+                    );
+                  },
+                  child: const Text('Search'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => FavoritesView(),
+                      ),
+                    );
+                  },
+                  child: const Text('Favorites'),
+                ),
+              ],
+            ),
+            Text(
+              'Top 10 Players',
+              style: const TextStyle(fontSize: 24),
+            ),
             FutureBuilder<Rankings>(
                 future: topPlayers,
                 builder: (BuildContext context, snapshot) {
@@ -81,10 +114,16 @@ class HomeViewState extends State<HomeView> {
                   } else if (snapshot.hasError) {
                     return Text('${snapshot.error}');
                   }
-                  return const SizedBox(
-                      width: 30,
-                      height: 30,
-                      child: CircularProgressIndicator());
+                  return const Center(
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                        SizedBox(
+                            width: 30,
+                            height: 30,
+                            child: CircularProgressIndicator())
+                      ]));
                 }),
           ],
         ),
