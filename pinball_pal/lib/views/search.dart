@@ -79,10 +79,9 @@ class SearchViewState extends State<SearchView> {
           children: [
             Form(
             key: formKey,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
+            child: 
+            Row(children: [
+              Expanded(child: 
                   TextFormField(
                     controller: textEditingController,
                     decoration: InputDecoration(
@@ -94,10 +93,11 @@ class SearchViewState extends State<SearchView> {
                       searchQuery = value;
                     },
                   ),
+              ),
                   Align(
                       alignment: Alignment.centerRight,
                       child: Padding(
-                        padding: EdgeInsets.all(20),
+                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                         child: ElevatedButton(
                           style: ButtonStyle(
                               shape: MaterialStateProperty.all(
@@ -109,6 +109,7 @@ class SearchViewState extends State<SearchView> {
                                   EdgeInsets.only(
                                       top: 5, bottom: 5, left: 20, right: 20))),
                           onPressed: () {
+                              FocusManager.instance.primaryFocus?.unfocus();
                               formKey.currentState!.save();
                               setState(() {
                                 searchQuery = textEditingController.text;
@@ -119,9 +120,8 @@ class SearchViewState extends State<SearchView> {
                         ),
                       ))
                 ],
-              ),
+              )
             ),
-          ),
             FutureBuilder<SearchResultModel>(
                 future: searchResults,
                 builder: (BuildContext context, snapshot) {
@@ -142,7 +142,6 @@ class SearchViewState extends State<SearchView> {
                                       ),
                                       trailing: ElevatedButton(
                                         onPressed: () {
-
                                           if (playerOneId != 0 && pvpSearch) {
                                             Navigator.push(
                                               context,
@@ -178,7 +177,7 @@ class SearchViewState extends State<SearchView> {
                 }),
           ],
         ),
-      ),
+      )
     );
   }
 }

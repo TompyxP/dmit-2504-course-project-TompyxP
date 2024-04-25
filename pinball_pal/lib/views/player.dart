@@ -53,7 +53,11 @@ class PlayerViewState extends State<PlayerView> {
       appBar: AppBar(
         title: const Text('Player Details'),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
+          child: Container( 
+            height: MediaQuery.of(context).orientation == Orientation.landscape ? MediaQuery.of(context).size.height + 200 : MediaQuery.of(context).size.height - 100,
+            width: MediaQuery.of(context).size.width,
+            child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,6 +73,7 @@ class PlayerViewState extends State<PlayerView> {
                           PlayerCard(player: snapshot.data!),
                           const SizedBox(height: 10),
                           ButtonBar(
+                            alignment: MainAxisAlignment.center,
                             children: [
                               ElevatedButton(
                                 onPressed: () {
@@ -109,8 +114,8 @@ class PlayerViewState extends State<PlayerView> {
                 }),
           ],
         ),
-      ),
-    );
+      )),
+    ));
   }
 
   Future<void> addToFavorites(PlayerModel player) async {
